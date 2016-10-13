@@ -1,12 +1,14 @@
 package com.usjr.finalsexam.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.usjr.finalsexam.R;
@@ -47,14 +49,25 @@ public class VideoListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_video, parent, false);
             holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+//            holder.tvTitle = (TextView)convertView.findViewById(R.id.tvTitle);
         } else {
+            //holder = new ViewHolder(convertView);
+
             holder = (ViewHolder) convertView.getTag();
+
         }
 
         Video video = mVideos.get(position);
         if (video != null) {
             if (holder.imgThumbnail != null) {
-                Glide.with(mContext).load(video.getThumbnailUrl()).into(holder.imgThumbnail);
+                Glide.with(mContext).load(video.getThumbnailUrl()).override(600,200).into(holder.imgThumbnail);
+
+
+            }
+            if(holder.tvTitle != null){
+
+                holder.tvTitle.setText(video.getTitle());
             }
         }
 
@@ -85,6 +98,8 @@ public class VideoListAdapter extends BaseAdapter {
 
         ViewHolder(View itemView) {
             tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+            tvTitle.setTextColor(Color.WHITE);
+            imgThumbnail = (ImageView) itemView.findViewById(R.id.imgThumbnail);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.widget.Toast;
 
 import com.usjr.finalsexam.entity.Video;
 
@@ -119,11 +120,28 @@ public class VideoTable {
 
     public static List<Video> getAllVideos(Context context) {
         List<Video> videos = new ArrayList<>();
-        SQLiteDatabase db = null;
+
+        SQLiteDatabase db = DbHandler.getInstance(context).getReadableDatabase();
         Cursor cursor = null;
 
         try {
+
             // TODO: Implement retrieval of all video items from the database
+            cursor = db.rawQuery(SELECT_QUERY, null);
+
+            if(cursor.moveToFirst()){
+
+                do{
+                    String id = cursor.getString(cursor.getColumnIndex(VideoEntry._ID));
+                    String title = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_TITLE));
+                    String desc = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_DESCRIPTION));
+                    String thumbnail = cursor.getString(cursor.getColumnIndex(VideoEntry.COL_THUMBNAIL_URL));
+                    Video video = new Video(id, title,desc,thumbnail);
+                    videos.add(video);
+
+                }while(cursor.moveToNext());
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
